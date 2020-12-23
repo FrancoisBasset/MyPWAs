@@ -1,0 +1,26 @@
+{
+	"name": "mypwas",
+	"version": "1.0.0",
+	"description": "Une Progressive Web App qui installe d'autres Progressive Web Apps",
+	"main": "index.js",
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/FrancoisBasset/MyPWAs.git"
+	},
+	"keywords": [
+		"pwa",
+		"pwas",
+		"progressive",
+		"web",
+		"apps"
+	],
+	"author": "FrancoisBasset",
+	"license": "ISC",
+	"bugs": {
+		"url": "https://github.com/FrancoisBasset/MyPWAs/issues"
+	},
+	"homepage": "https://github.com/FrancoisBasset/MyPWAs#readme"
+}
