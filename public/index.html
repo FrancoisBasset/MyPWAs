@@ -80,7 +80,7 @@
 		tab = 'installed';
 	});
 
-	fetch('/apps.json').then(function(response) {
+	fetch('/repositories.json').then(function(response) {
 		response.json().then(function(apps) {
 			for (const app of apps) {
 				/**

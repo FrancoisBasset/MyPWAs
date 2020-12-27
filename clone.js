@@ -1,61 +1,62 @@
 const fetch = require('node-fetch');
 const fs = require('fs');
-
 const admZip = require('adm-zip');
+const execSync = require('child_process').execSync;
 
-const appName = 'pwa3';
-const github = 'https://github.com/FrancoisBasset/pwa3/archive/master.zip';
+/**
+ * 
+ * @param {string} appName 
+ * @param {string} github
+ * @returns {Promise}
+ */
+module.exports = function(github) {
+	if (!fs.existsSync('./apis')) {
+		fs.mkdirSync('./apis');
+	}
 
-if (!fs.existsSync('./apis')) {
-	fs.mkdirSync('./apis');
-}
+	return fetch(github).then(function(r) {
+		/**
+		 * @type {fetch.Response}
+		 */
+		const response = r;
 
-if (!fs.existsSync(`./public/${appName}`)) {
-	fs.mkdirSync(`./public/${appName}`);
-}
+		return response.arrayBuffer().then(function(arrayBuffer) {
+			const buffer = Buffer.from(arrayBuffer);
+			const zipfile = new admZip(buffer);
 
-if (!fs.existsSync(`./apis/${appName}`)) {
-	fs.mkdirSync(`./apis/${appName}`);
-	fs.mkdirSync(`./apis/${appName}/classes`);
-	fs.mkdirSync(`./apis/${appName}/routes`);
-}
+			const root = zipfile.getEntries()[0].entryName;
+			const packageJsonEntry = zipfile.getEntry(root + 'package.json');
+			const packageJson = JSON.parse(packageJsonEntry.getData().toString());
+			const name = packageJson.name;
+			const dependencies = Object.keys(packageJson.dependencies).join(' ');
 
-fetch(github).then(function(r) {
-	/**
-	 * @type {fetch.Response}
-	 */
-	const response = r;
-
-	response.arrayBuffer().then(function(arrayBuffer) {
-		const buffer = Buffer.from(arrayBuffer);
-		const zipfile = new admZip(buffer);
-
-		zipfile.getEntries().forEach(function(entry) {
-			if (entry.entryName.includes('master/classes/') && !entry.entryName.endsWith('/')) {
-				fs.writeFileSync(`./apis/${appName}/classes/${entry.name}`, entry.getData());
+			if (!fs.existsSync(`./public/${name}`)) {
+				fs.mkdirSync(`./public/${name}`);
+			}
+		
+			if (!fs.existsSync(`./apis/${name}`)) {
+				fs.mkdirSync(`./apis/${name}`);
+				fs.mkdirSync(`./apis/${name}/classes`);
+				fs.mkdirSync(`./apis/${name}/routes`);
 			}
 
-			if (entry.entryName.includes('master/routes/') && !entry.entryName.endsWith('/')) {
-				fs.writeFileSync(`./apis/${appName}/routes/${entry.name}`, entry.getData());
-			}
-
-			if (entry.entryName.includes('master/public/') && !entry.entryName.endsWith('/')) {
-				fs.writeFileSync(`./public/${appName}/${entry.name}`, entry.getData());
-			}
-
-			
-			if (entry.entryName.includes('/package.json')) {
-				const jsonString = entry.getData().toString();
-				const json = JSON.parse(jsonString);
-
-				for (const dep of Object.keys(json.dependencies)) {
-					const exec = require('child_process').exec;
-
-					exec('npm install ' + dep, function(err, res) {
-
-					});
+			zipfile.getEntries().forEach(function(entry) {
+				if (entry.entryName.includes('master/classes/') && !entry.entryName.endsWith('/')) {
+					fs.writeFileSync(`./apis/${name}/classes/${entry.name}`, entry.getData());
 				}
-			}
+
+				if (entry.entryName.includes('master/routes/') && !entry.entryName.endsWith('/')) {
+					fs.writeFileSync(`./apis/${name}/routes/${entry.name}`, entry.getData());
+				}
+
+				if (entry.entryName.includes('master/public/') && !entry.entryName.endsWith('/')) {
+					fs.writeFileSync(`./public/${name}/${entry.name}`, entry.getData());
+				}
+			});
+			
+			execSync('npm install ' + dependencies);
+
+			return name;
 		});
 	});
-});
+}

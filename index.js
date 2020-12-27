@@ -11,6 +11,18 @@ app.get('/', function(req, res) {
 	res.sendFile('./index.html');
 });
 
+const clone = require('./clone');
+
+//installation
+/*const repositories = require('./public/repositories.json');
+for (const repository of repositories) {
+	clone(repository).then(function(name) {
+		app.use('/', require(`./apis/${name}/routes`));
+	});
+}*/
+
+//recuperer apis
+
 const fs = require('fs');
 if (fs.existsSync('./apis')) {
 	const apis = fs.readdirSync('./apis');
