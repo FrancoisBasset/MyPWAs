@@ -22,5 +22,10 @@
 	"bugs": {
 		"url": "https://github.com/FrancoisBasset/MyPWAs/issues"
 	},
-	"homepage": "https://github.com/FrancoisBasset/MyPWAs#readme"
+	"homepage": "https://github.com/FrancoisBasset/MyPWAs#readme",
+	"dependencies": {
+		"adm-zip": "^0.5.1",
+		"express": "^4.17.1",
+		"node-fetch": "^2.6.1"
+	}
 }

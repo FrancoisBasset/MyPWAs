@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>My PWAs</title>
+		<style>
+			#buttons {
+				display: inline-flex;
+
+				position: fixed;
+				border: 1px solid black;
+				bottom: 0px;
+				left: 0px;
+				right: 0px;
+
+				height: 10%;
+			}
+
+			#allAppsButton {
+				width: 50%;
+				cursor: pointer;
+				font-size: 40px;
+
+				outline: none;
+				border: 1px solid black;
+				background-color: white;
+			}
+
+			#installedAppsButton {
+				width: 50%;
+				cursor: pointer;
+				font-size: 40px;
+
+				outline: none;
+				border: 10px solid green;
+				background-color: white;
+			}
+
+			.apps {
+				display: block;
+			}
+
+			.app {
+				border: 1px solid black;
+				
+			}
+		</style>
+	</head>
+
+	<body>
+		<div id="apps">
+
+		</div>
+
+		<footer id="buttons">
+			<button id="allAppsButton">Toutes les applications</button>
+			<button id="installedAppsButton">Installés</button>
+		</footer>
+	</body>
+</html>
+
+<script>
+	var tab = 'installed';
+	var apps = [];
+
+	const appsDiv = document.getElementById('apps');
+	const allAppsButton = document.getElementById('allAppsButton');
+	const installedAppsButton = document.getElementById('installedAppsButton');
+
+	allAppsButton.addEventListener('click', function(e) {
+		allAppsButton.style.border = '10px solid green';
+		installedAppsButton.style.border = '1px solid black';
+
+		tab = 'all';
+	});
+
+	installedAppsButton.addEventListener('click', function(e) {
+		installedAppsButton.style.border = '10px solid green';
+		allAppsButton.style.border = '1px solid black';
+
+		tab = 'installed';
+	});
+
+	fetch('/apps.json').then(function(response) {
+		response.json().then(function(apps) {
+			for (const app of apps) {
+				/**
+				 * @type {string}
+				 * */
+				const github = app.github;
+				var favicon = github.replace('https://github.com', 'https://raw.githubusercontent.com');
+				favicon += '/master/public/favicon.ico';
+
+				appsDiv.innerHTML += '<div class="app">';
+				appsDiv.innerHTML += `<img src="${favicon}" width="200" height="200" />`;
+				appsDiv.innerHTML += `<label>${app.name}</label>`;
+				appsDiv.innerHTML += '</div>';
+			}
+		});
+	});
+</script>
