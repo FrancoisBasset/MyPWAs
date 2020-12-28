@@ -42,6 +42,7 @@
 			.app {
 				border: 1px solid black;
 				
+				cursor: pointer;
 			}
 		</style>
 	</head>
@@ -81,20 +82,32 @@
 	});
 
 	fetch('/repositories.json').then(function(response) {
-		response.json().then(function(apps) {
-			for (const app of apps) {
-				/**
-				 * @type {string}
-				 * */
-				const github = app.github;
-				var favicon = github.replace('https://github.com', 'https://raw.githubusercontent.com');
-				favicon += '/master/public/favicon.ico';
+		response.json().then(function(repositories) {
+			for (const repository of repositories) {
+				const rawUrl = repository.replace('https://github.com', 'https://raw.githubusercontent.com');
 
-				appsDiv.innerHTML += '<div class="app">';
-				appsDiv.innerHTML += `<img src="${favicon}" width="200" height="200" />`;
-				appsDiv.innerHTML += `<label>${app.name}</label>`;
-				appsDiv.innerHTML += '</div>';
+				fetch(rawUrl + '/master/package.json').then(function(response) {
+					response.json().then(function(json) {
+						const favicon = rawUrl + '/master/public/favicon.ico';
+
+						appsDiv.innerHTML += `<div class="app" data-repository="${repository}" onclick="install('${repository}')">`;
+						appsDiv.innerHTML += `<img src="${favicon}" width="200" height="200" />`;
+						appsDiv.innerHTML += `<label>${json.title}</label>`;
+						appsDiv.innerHTML += '</div>';
+					});
+				});
 			}
 		});
 	});
+
+	function install(repository) {
+		fetch('/install', {
+			headers: {
+				'Accept': 'application/json',
+				'Content-Type': 'application/json'
+			},
+			method: 'POST',
+			body: JSON.stringify({repository: repository})
+		});
+	}
 </script>

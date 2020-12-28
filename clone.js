@@ -14,7 +14,7 @@ module.exports = function(github) {
 		fs.mkdirSync('./apis');
 	}
 
-	return fetch(github).then(function(r) {
+	return fetch(github + '/archive/master.zip').then(function(r) {
 		/**
 		 * @type {fetch.Response}
 		 */
