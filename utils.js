@@ -3,15 +3,55 @@ const fs = require('fs');
 const admZip = require('adm-zip');
 const execSync = require('child_process').execSync;
 
+module.exports.getAllPwas = async function() {
+	const repositories = require('./repositories.json');
+	var pwas = [];
+
+	for (const repository of repositories) {
+		const rawUrl = repository.replace('https://github.com', 'https://raw.githubusercontent.com');
+
+		const response = await fetch(rawUrl + '/master/package.json');
+		const packageJson = await response.json();
+
+		pwas.push({
+			name: packageJson.name,
+			title: packageJson.title,
+			repository: repository,
+			favicon: rawUrl + '/master/public/favicon.ico',
+			installed: this.getInstalledPwas().includes(packageJson.name)
+		});
+	}
+
+	return pwas;
+}
+
+module.exports.getInstalledPwas = function() {
+	if (fs.existsSync('./pwas')) {
+		const pwas = fs.readdirSync('./pwas');
+		const public = fs.readdirSync('./public');
+		public.splice(public.indexOf('index.html'), 1);
+
+		for (const pwa of pwas) {
+			if (!public.includes(pwa)) {
+				pwas.splice(pwas.indexOf(pwa), 1);
+			}
+		}
+
+		return pwas;
+	} else {
+		return [];
+	}
+}
+
 /**
  * 
  * @param {string} appName 
  * @param {string} github
  * @returns {Promise}
  */
-module.exports = function(github) {
-	if (!fs.existsSync('./apis')) {
-		fs.mkdirSync('./apis');
+module.exports.install = function(github) {
+	if (!fs.existsSync('./pwas')) {
+		fs.mkdirSync('./pwas');
 	}
 
 	return fetch(github + '/archive/master.zip').then(function(r) {
@@ -34,19 +74,19 @@ module.exports = function(github) {
 				fs.mkdirSync(`./public/${name}`);
 			}
 		
-			if (!fs.existsSync(`./apis/${name}`)) {
-				fs.mkdirSync(`./apis/${name}`);
-				fs.mkdirSync(`./apis/${name}/classes`);
-				fs.mkdirSync(`./apis/${name}/routes`);
+			if (!fs.existsSync(`./pwas/${name}`)) {
+				fs.mkdirSync(`./pwas/${name}`);
+				fs.mkdirSync(`./pwas/${name}/classes`);
+				fs.mkdirSync(`./pwas/${name}/routes`);
 			}
 
 			zipfile.getEntries().forEach(function(entry) {
 				if (entry.entryName.includes('master/classes/') && !entry.entryName.endsWith('/')) {
-					fs.writeFileSync(`./apis/${name}/classes/${entry.name}`, entry.getData());
+					fs.writeFileSync(`./pwas/${name}/classes/${entry.name}`, entry.getData());
 				}
 
 				if (entry.entryName.includes('master/routes/') && !entry.entryName.endsWith('/')) {
-					fs.writeFileSync(`./apis/${name}/routes/${entry.name}`, entry.getData());
+					fs.writeFileSync(`./pwas/${name}/routes/${entry.name}`, entry.getData());
 				}
 
 				if (entry.entryName.includes('master/public/') && !entry.entryName.endsWith('/')) {

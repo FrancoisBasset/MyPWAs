@@ -1,12 +1,12 @@
 const express = require('express');
-const app = express();
 const bodyParser = require('body-parser');
-const clone = require('./clone');
+const fs = require('fs');
+const utils = require('./utils');
 
+const app = express();
 app.listen(3000, function() {
 	console.log('Start on 3000');
 });
-
 app.use(express.static('./public'));
 app.use(bodyParser.json());
 
@@ -14,9 +14,16 @@ app.get('/', function(req, res) {
 	res.sendFile('./index.html');
 });
 
+app.get('/allPwas', async function(req, res) {
+	res.json({
+		success: true,
+		response: await utils.getAllPwas()
+	});
+});
+
 app.post('/install', function(req, res) {
-	clone(req.body.repository).then(function(name) {
-		app.use('/', require(`./apis/${name}/routes`));
+	utils.install(req.body.repository).then(function(name) {
+		app.use('/', require(`./pwas/${name}/routes`));
 
 		res.json({
 			success: true
@@ -24,11 +31,8 @@ app.post('/install', function(req, res) {
 	});
 });
 
-const fs = require('fs');
-if (fs.existsSync('./apis')) {
-	const apis = fs.readdirSync('./apis');
-	
-	for (const api of apis) {
-		app.use('/', require(`./apis/${api}/routes`));
+if (fs.existsSync('./pwas')) {
+	for (const pwa of utils.getInstalledPwas()) {
+		app.use('/', require(`./pwas/${pwa}/routes`));
 	}
 }
