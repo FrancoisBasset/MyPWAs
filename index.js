@@ -31,6 +31,10 @@ app.post('/install', function(req, res) {
 	});
 });
 
+app.post('/uninstall', function(req, res) {
+	utils.uninstall(app, req.body.pwa);
+});
+
 if (fs.existsSync('./pwas')) {
 	for (const pwa of utils.getInstalledPwas()) {
 		app.use('/', require(`./pwas/${pwa}/routes`));

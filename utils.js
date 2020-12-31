@@ -100,3 +100,14 @@ module.exports.install = function(github) {
 		});
 	});
 }
+
+module.exports.uninstall = function(app, pwa) {
+	fs.rmdirSync(`./pwas/${pwa}`, {recursive: true});
+	fs.rmdirSync(`./public/${pwa}`, {recursive: true});
+
+	for (const r of app._router.stack) {
+		if (r.name == 'router' && r.handle.stack[0].route.path.includes(`/${pwa}/`)) {
+			app._router.stack.splice(app._router.stack.indexOf(r), 1);
+		}
+	}
+}
