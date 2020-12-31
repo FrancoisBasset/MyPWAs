@@ -21,18 +21,24 @@ app.get('/allPwas', async function(req, res) {
 	});
 });
 
-app.post('/install', function(req, res) {
-	utils.install(req.body.repository).then(function(name) {
+app.post('/install', async function(req, res) {
+	utils.install(req.body.repository).then(async function(name) {
 		app.use('/', require(`./pwas/${name}/routes`));
 
 		res.json({
-			success: true
+			success: true,
+			response: await utils.getAllPwas()
 		});
 	});
 });
 
-app.post('/uninstall', function(req, res) {
+app.post('/uninstall', async function(req, res) {
 	utils.uninstall(app, req.body.pwa);
+
+	res.json({
+		success: true,
+		response: await utils.getAllPwas()
+	});
 });
 
 if (fs.existsSync('./pwas')) {
