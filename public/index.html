@@ -2,6 +2,7 @@
 <html>
 	<head>
 		<title>My PWAs</title>
+		<link rel="manifest" href="/Manifest.json" />
 		<style>
 			#buttons {
 				display: inline-flex;
@@ -147,4 +148,8 @@
 			});
 		});
 	}
+
+	if('serviceWorker' in navigator) {
+		navigator.serviceWorker.register('./sw.js');
+	};
 </script>

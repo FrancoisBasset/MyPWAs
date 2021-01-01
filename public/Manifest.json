@@ -1,0 +1,22 @@
+{
+	"name": "My PWAs",
+	"short_name": "My PWAs",
+	"description": "My PWAs",
+	
+	"start_url": "/",
+	"scope": "/",
+
+	"theme_color": "white",
+	"background_color": "white",
+
+	"orientation": "portrait",
+	"display": "fullscreen",
+
+	"icons": [
+		{
+			"src": "icon_256x256.png",
+			"type": "image/png",
+			"sizes": "256x256"
+		}
+	]
+}
