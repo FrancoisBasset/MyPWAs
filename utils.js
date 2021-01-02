@@ -89,7 +89,13 @@ module.exports.install = function(github) {
 				}
 
 				if (entry.entryName.includes('master/public/') && !entry.entryName.endsWith('/')) {
-					fs.writeFileSync(`./public/${name}/${entry.name}`, entry.getData());
+					if (entry.entryName.includes('/Manifest.json')) {
+						const json = JSON.parse(entry.getData().toString());
+						json.start_url += name + '/';
+						fs.writeFileSync(`./public/${name}/${entry.name}`, JSON.stringify(json, null, '\t'));
+					} else {
+						fs.writeFileSync(`./public/${name}/${entry.name}`, entry.getData());
+					}
 				}
 			});
 			
