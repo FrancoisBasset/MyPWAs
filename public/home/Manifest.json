@@ -3,8 +3,7 @@
 	"short_name": "My PWAs",
 	"description": "My PWAs",
 	
-	"start_url": "/",
-	"scope": "/",
+	"start_url": "/home/",
 
 	"theme_color": "white",
 	"background_color": "white",

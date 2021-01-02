@@ -29,7 +29,6 @@ module.exports.getInstalledPwas = function() {
 	if (fs.existsSync('./pwas')) {
 		const pwas = fs.readdirSync('./pwas');
 		const public = fs.readdirSync('./public');
-		public.splice(public.indexOf('index.html'), 1);
 
 		for (const pwa of pwas) {
 			if (!public.includes(pwa)) {

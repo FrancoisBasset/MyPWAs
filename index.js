@@ -11,7 +11,11 @@ app.use(express.static('./public'));
 app.use(bodyParser.json());
 
 app.get('/', function(req, res) {
-	res.sendFile('./index.html');
+	res.redirect('/home');
+})
+
+app.get('/home', function(req, res) {
+	res.sendFile('./home/index.html');
 });
 
 app.get('/allPwas', async function(req, res) {
