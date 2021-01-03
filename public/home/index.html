@@ -8,7 +8,8 @@
 				display: inline-flex;
 
 				position: fixed;
-				border: 1px solid black;
+				border: none;
+				border-top: 1px solid green;
 				bottom: 0px;
 				left: 0px;
 				right: 0px;
@@ -22,7 +23,7 @@
 				font-size: 40px;
 
 				outline: none;
-				border: 1px solid black;
+				border: none;
 				background-color: white;
 			}
 
@@ -32,8 +33,9 @@
 				font-size: 40px;
 
 				outline: none;
-				border: 10px solid green;
-				background-color: white;
+				border: none;
+				background-color: green;
+				color: white;
 			}
 		</style>
 	</head>
@@ -59,16 +61,20 @@
 	const installedAppsButton = document.getElementById('installedAppsButton');
 
 	allAppsButton.addEventListener('click', function(e) {
-		allAppsButton.style.border = '10px solid green';
-		installedAppsButton.style.border = '1px solid black';
+		allAppsButton.style.backgroundColor = 'green';
+		allAppsButton.style.color = 'white';
+		installedAppsButton.style.backgroundColor = 'white';
+		installedAppsButton.style.color = 'black';
 
 		tab = 'all';
 		refresh();
 	});
 
 	installedAppsButton.addEventListener('click', function(e) {
-		installedAppsButton.style.border = '10px solid green';
-		allAppsButton.style.border = '1px solid black';
+		installedAppsButton.style.backgroundColor = 'green';
+		installedAppsButton.style.color = 'white';
+		allAppsButton.style.backgroundColor = 'white';
+		allAppsButton.style.color = 'black';
 
 		tab = 'installed';
 		refresh();
