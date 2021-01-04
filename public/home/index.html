@@ -128,21 +128,17 @@
 
 		for (const pwa of pwas) {
 			appsDiv.innerHTML += `<tr>`;
+			appsDiv.innerHTML += `<td><img src="${pwa.favicon}" width="200" height="200" /></td>`;
+			appsDiv.innerHTML += `<td><label>${pwa.title}</label></td>`;
 
 			if (tab == 'installed') {
 				if (pwa.installed) {
-					appsDiv.innerHTML += `<td><img src="${pwa.favicon}" width="200" height="200" /></td>`;
-					appsDiv.innerHTML += `<td><label>${pwa.title}</label></td>`;
 					appsDiv.innerHTML += `<td><button onclick="startApp('${pwa.name}')">Lancer</label></td>`;
 				}
 			} else if (tab == 'all') {
 				if (pwa.installed) {
-					appsDiv.innerHTML += `<td><img src="${pwa.favicon}" width="200" height="200" /></td>`;
-					appsDiv.innerHTML += `<td><label>${pwa.title}</label></td>`;
 					appsDiv.innerHTML += `<td><button onclick="uninstall('${pwa.name}')">Désinstaller</label></td>`;
 				} else {
-					appsDiv.innerHTML += `<td><img src="${pwa.favicon}" width="200" height="200" /></td>`;
-					appsDiv.innerHTML += `<td><label>${pwa.title}</label></td>`;
 					appsDiv.innerHTML += `<td><button onclick="install('${pwa.repository}')">Installer</label></td>`;
 				}
 			}
