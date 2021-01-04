@@ -37,13 +37,18 @@
 				background-color: green;
 				color: white;
 			}
+
+			#apps {
+				text-align: center;
+				width: 100%;
+			}
 		</style>
 	</head>
 
 	<body>
-		<div id="apps">
+		<table id="apps">
 
-		</div>
+		</table>
 
 		<footer id="buttons">
 			<button id="allAppsButton">Toutes les applications</button>
@@ -122,27 +127,27 @@
 		appsDiv.innerHTML = '';
 
 		for (const pwa of pwas) {
-			appsDiv.innerHTML += `<div>`;
+			appsDiv.innerHTML += `<tr>`;
 
 			if (tab == 'installed') {
 				if (pwa.installed) {
-					appsDiv.innerHTML += `<img src="${pwa.favicon}" width="200" height="200" />`;
-					appsDiv.innerHTML += `<label>${pwa.title}</label>`;
-					appsDiv.innerHTML += `<button onclick="startApp('${pwa.name}')">Lancer</label>`;
+					appsDiv.innerHTML += `<td><img src="${pwa.favicon}" width="200" height="200" /></td>`;
+					appsDiv.innerHTML += `<td><label>${pwa.title}</label></td>`;
+					appsDiv.innerHTML += `<td><button onclick="startApp('${pwa.name}')">Lancer</label></td>`;
 				}
 			} else if (tab == 'all') {
 				if (pwa.installed) {
-					appsDiv.innerHTML += `<img src="${pwa.favicon}" width="200" height="200" />`;
-					appsDiv.innerHTML += `<label>${pwa.title}</label>`;
-					appsDiv.innerHTML += `<button onclick="uninstall('${pwa.name}')">Désinstaller</label>`;
+					appsDiv.innerHTML += `<td><img src="${pwa.favicon}" width="200" height="200" /></td>`;
+					appsDiv.innerHTML += `<td><label>${pwa.title}</label></td>`;
+					appsDiv.innerHTML += `<td><button onclick="uninstall('${pwa.name}')">Désinstaller</label></td>`;
 				} else {
-					appsDiv.innerHTML += `<img src="${pwa.favicon}" width="200" height="200" />`;
-					appsDiv.innerHTML += `<label>${pwa.title}</label>`;
-					appsDiv.innerHTML += `<button onclick="install('${pwa.repository}')">Installer</label>`;
+					appsDiv.innerHTML += `<td><img src="${pwa.favicon}" width="200" height="200" /></td>`;
+					appsDiv.innerHTML += `<td><label>${pwa.title}</label></td>`;
+					appsDiv.innerHTML += `<td><button onclick="install('${pwa.repository}')">Installer</label></td>`;
 				}
 			}
 			
-			appsDiv.innerHTML += '</div>';
+			appsDiv.innerHTML += '</tr>';
 		}
 	}
 
