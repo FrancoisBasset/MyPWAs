@@ -123,28 +123,35 @@
 	}
 
 	function showPwas() {
-		var html = '';
+		var html = '<tr>';
+		var i = 0;
 
 		for (const pwa of pwas) {
+			if (i % 2 == 0 && i != 0) {
+				html += '</td></tr>';
+			}
+
 			if ((tab == 'installed' && pwa.installed) || tab == 'all') {
-				html += `<tr>
-						<td><img src="${pwa.favicon}" width="200" height="200" /></td>
-						<td><label style="font-size: 20px">${pwa.title}</label></td>`;
+				html += '<td><div>';
+				html += `<img src="${pwa.favicon}" width="200" height="200" /><br>`;
+				html += `<label style="font-size: 20px">${pwa.title}</label><br>`;
 			}
 
 			if (tab == 'installed' && pwa.installed) {
-				html += `<td><button onclick="startApp('${pwa.name}')">Lancer</button></td>`;
-				html += '</tr>';
+				html += `<button onclick="startApp('${pwa.name}')">Lancer</button>`;
 			} else if (tab == 'all') {
 				if (pwa.installed) {
-					html += `<td><button onclick="uninstall('${pwa.name}')">Désinstaller</button></td>`;
-					html += '</tr>';
+					html += `<button onclick="uninstall('${pwa.name}')">Désinstaller</button>`;
 				} else {
-					html += `<td><button onclick="install('${pwa.repository}')">Installer</button></td>`;
-					html += '</tr>';
+					html += `<button onclick="install('${pwa.repository}')">Installer</button>`;
 				}
 			}
+
+			i++;
+			html += '</div></td>';
 		}
+
+		html += '</tr>';
 		
 		appsDiv.innerHTML = html;
 	}
