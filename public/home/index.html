@@ -47,7 +47,6 @@
 
 	<body>
 		<table id="apps">
-
 		</table>
 
 		<footer id="buttons">
@@ -124,27 +123,30 @@
 	}
 
 	function showPwas() {
-		appsDiv.innerHTML = '';
+		var html = '';
 
 		for (const pwa of pwas) {
-			appsDiv.innerHTML += `<tr>`;
-			appsDiv.innerHTML += `<td><img src="${pwa.favicon}" width="200" height="200" /></td>`;
-			appsDiv.innerHTML += `<td><label>${pwa.title}</label></td>`;
+			if ((tab == 'installed' && pwa.installed) || tab == 'all') {
+				html += `<tr>
+						<td><img src="${pwa.favicon}" width="200" height="200" /></td>
+						<td><label style="font-size: 20px">${pwa.title}</label></td>`;
+			}
 
-			if (tab == 'installed') {
-				if (pwa.installed) {
-					appsDiv.innerHTML += `<td><button onclick="startApp('${pwa.name}')">Lancer</label></td>`;
-				}
+			if (tab == 'installed' && pwa.installed) {
+				html += `<td><button onclick="startApp('${pwa.name}')">Lancer</button></td>`;
+				html += '</tr>';
 			} else if (tab == 'all') {
 				if (pwa.installed) {
-					appsDiv.innerHTML += `<td><button onclick="uninstall('${pwa.name}')">Désinstaller</label></td>`;
+					html += `<td><button onclick="uninstall('${pwa.name}')">Désinstaller</button></td>`;
+					html += '</tr>';
 				} else {
-					appsDiv.innerHTML += `<td><button onclick="install('${pwa.repository}')">Installer</label></td>`;
+					html += `<td><button onclick="install('${pwa.repository}')">Installer</button></td>`;
+					html += '</tr>';
 				}
 			}
-			
-			appsDiv.innerHTML += '</tr>';
 		}
+		
+		appsDiv.innerHTML = html;
 	}
 
 	function refresh() {
