@@ -131,19 +131,19 @@
 				html += '</td></tr>';
 			}
 
-			if ((tab == 'installed' && pwa.installed) || tab == 'all') {
+			if (tab == 'installed' && pwa.installed) {
+				html += '<td><div>';
+				html += `<img src="${pwa.favicon}" onclick="startApp('${pwa.name}')" width="200" height="200" style="cursor: pointer" /><br>`;
+				html += `<label style="font-size: 40px; font-family: sans-serif;cursor: pointer" onclick="startApp('${pwa.name}')">${pwa.title}</label><br>`;
+			} else if (tab == 'all') {
 				html += '<td><div>';
 				html += `<img src="${pwa.favicon}" width="200" height="200" /><br>`;
-				html += `<label style="font-size: 20px">${pwa.title}</label><br>`;
-			}
+				html += `<label style="font-size: 40px; font-family: sans-serif;">${pwa.title}</label><br>`;
 
-			if (tab == 'installed' && pwa.installed) {
-				html += `<button onclick="startApp('${pwa.name}')">Lancer</button>`;
-			} else if (tab == 'all') {
 				if (pwa.installed) {
-					html += `<button onclick="uninstall('${pwa.name}')">Désinstaller</button>`;
+					html += `<button onclick="uninstall('${pwa.name}')" style="width: 100px; height: 40px">Désinstaller</button>`;
 				} else {
-					html += `<button onclick="install('${pwa.repository}')">Installer</button>`;
+					html += `<button onclick="install('${pwa.repository}')" style="width: 100px; height: 40px">Installer</button>`;
 				}
 			}
 
