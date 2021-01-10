@@ -19,7 +19,6 @@
 
 			#allAppsButton {
 				width: 50%;
-				cursor: pointer;
 				font-size: 40px;
 
 				outline: none;
@@ -29,7 +28,6 @@
 
 			#installedAppsButton {
 				width: 50%;
-				cursor: pointer;
 				font-size: 40px;
 
 				outline: none;
@@ -42,6 +40,24 @@
 				text-align: center;
 				width: 100%;
     			border-spacing: 80px;
+			}
+
+			button {
+				cursor: pointer;
+			}
+
+			.installButton, .uninstallButton {
+				width: 100px;
+				height: 40px;
+			}
+
+			.loader {
+				border: 16px solid #f3f3f3; /* Light grey */
+				border-top: 16px solid #3498db; /* Blue */
+				border-radius: 50%;
+				width: 120px;
+				height: 120px;
+				animation: spin 2s linear infinite;
 			}
 		</style>
 	</head>
@@ -87,14 +103,14 @@
 
 	refresh();
 
-	function install(repository) {
+	function install(index) {
 		fetch('/install', {
 			headers: {
 				'Accept': 'application/json',
 				'Content-Type': 'application/json'
 			},
 			method: 'POST',
-			body: JSON.stringify({repository: repository})
+			body: JSON.stringify({repository: pwas[index].repository})
 		}).then(function(response) {
 			response.json().then(function(json) {
 				pwas = json.response;
@@ -103,14 +119,14 @@
 		});
 	}
 
-	function uninstall(pwa) {
+	function uninstall(index) {
 		fetch('/uninstall', {
 			headers: {
 				'Accept': 'application/json',
 				'Content-Type': 'application/json'
 			},
 			method: 'POST',
-			body: JSON.stringify({pwa: pwa})
+			body: JSON.stringify({pwa: pwas[index].name})
 		}).then(function(response) {
 			response.json().then(function(json) {
 				pwas = json.response;
@@ -119,8 +135,8 @@
 		});
 	}
 
-	function startApp(name) {
-		window.location.href = '/' + name;
+	function startApp(index) {
+		window.location.href = '/' + pwas[index].name;
 	}
 
 	function showPwas() {
@@ -134,17 +150,17 @@
 
 			if (tab == 'installed' && pwa.installed) {
 				html += '<td><div>';
-				html += `<img src="${pwa.favicon}" onclick="startApp('${pwa.name}')" width="200" height="200" style="cursor: pointer" /><br>`;
-				html += `<label style="font-size: 40px; font-family: sans-serif;cursor: pointer" onclick="startApp('${pwa.name}')">${pwa.title}</label><br>`;
+				html += `<img src="${pwa.favicon}" onclick="startApp('${i}')" width="200" height="200" style="cursor: pointer" /><br>`;
+				html += `<label style="font-size: 40px; font-family: sans-serif;cursor: pointer" onclick="startApp('${i}')">${pwa.title}</label><br>`;
 			} else if (tab == 'all') {
 				html += '<td><div>';
 				html += `<img src="${pwa.favicon}" width="200" height="200" /><br>`;
 				html += `<label style="font-size: 40px; font-family: sans-serif;">${pwa.title}</label><br>`;
 
 				if (pwa.installed) {
-					html += `<button onclick="uninstall('${pwa.name}')" style="width: 100px; height: 40px">Désinstaller</button>`;
+					html += `<button class="uninstallButton" onclick="uninstall('${i}')" style="">Désinstaller</button>`;
 				} else {
-					html += `<button onclick="install('${pwa.repository}')" style="width: 100px; height: 40px">Installer</button>`;
+					html += `<button class="installButton" onclick="install('${i}')">Installer</button>`;
 				}
 			}
 
