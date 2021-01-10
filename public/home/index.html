@@ -112,6 +112,7 @@
 
 	function install(i) {
 		document.getElementById('div-' + i).children[4].outerHTML = '<div class="loader"></div>';
+		pwas[i].loading = true;
 
 		fetch('/install', {
 			headers: {
@@ -121,13 +122,18 @@
 			method: 'POST',
 			body: JSON.stringify({repository: pwas[i].repository})
 		}).then(function(response) {
-			document.getElementById('div-' + i).children[4].outerHTML = `<button class="uninstallButton" onclick="uninstall('${i}')">Désinstaller</button>`;
+			if (document.getElementById('div-' + i) != null) {
+				document.getElementById('div-' + i).children[4].outerHTML = `<button class="uninstallButton" onclick="uninstall('${i}')">Désinstaller</button>`;
+			}
+			
 			pwas[i].installed = true;
+			pwas[i].loading = false;
 		});
 	}
 
 	function uninstall(i) {
 		document.getElementById('div-' + i).children[4].outerHTML = '<div class="loader"></div>';
+		pwas[i].loading = true;
 		
 		fetch('/uninstall', {
 			headers: {
@@ -137,8 +143,12 @@
 			method: 'POST',
 			body: JSON.stringify({pwa: pwas[i].name})
 		}).then(function(response) {
-			document.getElementById('div-' + i).children[4].outerHTML = `<button class="installButton" onclick="install('${i}')">Installer</button>`;
+			if (document.getElementById('div-' + i) != null) {
+				document.getElementById('div-' + i).children[4].outerHTML = `<button class="installButton" onclick="install('${i}')">Installer</button>`;
+			}
+
 			pwas[i].installed = false;
+			pwas[i].loading = false;
 		});
 	}
 
@@ -166,6 +176,8 @@
 
 				if (pwa.installed) {
 					html += `<button class="uninstallButton" onclick="uninstall('${i}')">Désinstaller</button>`;
+				} else if (pwa.loading) {
+					html += '<div class="loader"></div>';
 				} else {
 					html += `<button class="installButton" onclick="install('${i}')">Installer</button>`;
 				}
