@@ -122,6 +122,7 @@
 			body: JSON.stringify({repository: pwas[i].repository})
 		}).then(function(response) {
 			document.getElementById('div-' + i).children[4].outerHTML = `<button class="uninstallButton" onclick="uninstall('${i}')">Désinstaller</button>`;
+			pwas[i].installed = true;
 		});
 	}
 
@@ -137,6 +138,7 @@
 			body: JSON.stringify({pwa: pwas[i].name})
 		}).then(function(response) {
 			document.getElementById('div-' + i).children[4].outerHTML = `<button class="installButton" onclick="install('${i}')">Installer</button>`;
+			pwas[i].installed = false;
 		});
 	}
 
