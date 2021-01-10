@@ -95,7 +95,7 @@
 		installedPwasButton.style.color = 'black';
 
 		tab = 'all';
-		refresh();
+		showPwas();
 	});
 
 	installedPwasButton.addEventListener('click', function(e) {
@@ -105,10 +105,10 @@
 		allPwasButton.style.color = 'black';
 
 		tab = 'installed';
-		refresh();
+		showPwas();
 	});
 
-	refresh();
+	updatePwas();
 
 	function install(i) {
 		document.getElementById('div-' + i).children[4].outerHTML = '<div class="loader"></div>';
@@ -178,7 +178,7 @@
 		pwasDiv.innerHTML = html;
 	}
 
-	function refresh() {
+	function updatePwas() {
 		fetch('/allPwas').then(function(response) {
 			response.json().then(function(json) {
 				pwas = json.response;
