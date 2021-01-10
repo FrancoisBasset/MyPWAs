@@ -17,7 +17,7 @@
 				height: 10%;
 			}
 
-			#allAppsButton {
+			#allPwasButton {
 				width: 50%;
 				font-size: 40px;
 
@@ -26,7 +26,7 @@
 				background-color: white;
 			}
 
-			#installedAppsButton {
+			#installedPwasButton {
 				width: 50%;
 				font-size: 40px;
 
@@ -36,7 +36,7 @@
 				color: white;
 			}
 
-			#apps {
+			#pwas {
 				text-align: center;
 				width: 100%;
     			border-spacing: 80px;
@@ -70,12 +70,12 @@
 	</head>
 
 	<body>
-		<table id="apps">
+		<table id="pwas">
 		</table>
 
 		<footer id="buttons">
-			<button id="allAppsButton">Toutes les applications</button>
-			<button id="installedAppsButton">Installés</button>
+			<button id="allPwasButton">Toutes les applications</button>
+			<button id="installedPwasButton">Installés</button>
 		</footer>
 	</body>
 </html>
@@ -84,25 +84,25 @@
 	var tab = 'installed';
 	var pwas = [];
 
-	const appsDiv = document.getElementById('apps');
-	const allAppsButton = document.getElementById('allAppsButton');
-	const installedAppsButton = document.getElementById('installedAppsButton');
+	const pwasDiv = document.getElementById('pwas');
+	const allPwasButton = document.getElementById('allPwasButton');
+	const installedPwasButton = document.getElementById('installedPwasButton');
 
-	allAppsButton.addEventListener('click', function(e) {
-		allAppsButton.style.backgroundColor = 'green';
-		allAppsButton.style.color = 'white';
-		installedAppsButton.style.backgroundColor = 'white';
-		installedAppsButton.style.color = 'black';
+	allPwasButton.addEventListener('click', function(e) {
+		allPwasButton.style.backgroundColor = 'green';
+		allPwasButton.style.color = 'white';
+		installedPwasButton.style.backgroundColor = 'white';
+		installedPwasButton.style.color = 'black';
 
 		tab = 'all';
 		refresh();
 	});
 
-	installedAppsButton.addEventListener('click', function(e) {
-		installedAppsButton.style.backgroundColor = 'green';
-		installedAppsButton.style.color = 'white';
-		allAppsButton.style.backgroundColor = 'white';
-		allAppsButton.style.color = 'black';
+	installedPwasButton.addEventListener('click', function(e) {
+		installedPwasButton.style.backgroundColor = 'green';
+		installedPwasButton.style.color = 'white';
+		allPwasButton.style.backgroundColor = 'white';
+		allPwasButton.style.color = 'black';
 
 		tab = 'installed';
 		refresh();
@@ -140,7 +140,7 @@
 		});
 	}
 
-	function startApp(i) {
+	function startPwa(i) {
 		window.location.href = '/' + pwas[i].name;
 	}
 
@@ -155,8 +155,8 @@
 
 			if (tab == 'installed' && pwa.installed) {
 				html += `<td><div id="div-${i}">`;
-				html += `<img src="${pwa.favicon}" onclick="startApp('${i}')" width="200" height="200" style="cursor: pointer" /><br>`;
-				html += `<label style="font-size: 40px; font-family: sans-serif;cursor: pointer" onclick="startApp('${i}')">${pwa.title}</label><br>`;
+				html += `<img src="${pwa.favicon}" onclick="startPwa('${i}')" width="200" height="200" style="cursor: pointer" /><br>`;
+				html += `<label style="font-size: 40px; font-family: sans-serif;cursor: pointer" onclick="startPwa('${i}')">${pwa.title}</label><br>`;
 			} else if (tab == 'all') {
 				html += `<td><div id="div-${i}">`;
 				html += `<img src="${pwa.favicon}" width="200" height="200" /><br>`;
@@ -175,7 +175,7 @@
 
 		html += '</tr>';
 		
-		appsDiv.innerHTML = html;
+		pwasDiv.innerHTML = html;
 	}
 
 	function refresh() {
