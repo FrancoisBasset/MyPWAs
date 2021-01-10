@@ -110,8 +110,8 @@
 
 	refresh();
 
-	function install(index) {
-		document.getElementById('div-' + index).children[4].outerHTML = '<div class="loader"></div>';
+	function install(i) {
+		document.getElementById('div-' + i).children[4].outerHTML = '<div class="loader"></div>';
 
 		fetch('/install', {
 			headers: {
@@ -119,20 +119,20 @@
 				'Content-Type': 'application/json'
 			},
 			method: 'POST',
-			body: JSON.stringify({repository: pwas[index].repository})
+			body: JSON.stringify({repository: pwas[i].repository})
 		}).then(function(response) {
-			document.getElementById('div-' + index).children[4].outerHTML = `<button class="uninstallButton" onclick="uninstall('${index}')" style="">Désinstaller</button>`;
+			document.getElementById('div-' + i).children[4].outerHTML = `<button class="uninstallButton" onclick="uninstall('${i}')" style="">Désinstaller</button>`;
 		});
 	}
 
-	function uninstall(index) {
+	function uninstall(i) {
 		fetch('/uninstall', {
 			headers: {
 				'Accept': 'application/json',
 				'Content-Type': 'application/json'
 			},
 			method: 'POST',
-			body: JSON.stringify({pwa: pwas[index].name})
+			body: JSON.stringify({pwa: pwas[i].name})
 		}).then(function(response) {
 			response.json().then(function(json) {
 				pwas = json.response;
@@ -141,8 +141,8 @@
 		});
 	}
 
-	function startApp(index) {
-		window.location.href = '/' + pwas[index].name;
+	function startApp(i) {
+		window.location.href = '/' + pwas[i].name;
 	}
 
 	function showPwas() {
