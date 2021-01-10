@@ -121,11 +121,13 @@
 			method: 'POST',
 			body: JSON.stringify({repository: pwas[i].repository})
 		}).then(function(response) {
-			document.getElementById('div-' + i).children[4].outerHTML = `<button class="uninstallButton" onclick="uninstall('${i}')" style="">Désinstaller</button>`;
+			document.getElementById('div-' + i).children[4].outerHTML = `<button class="uninstallButton" onclick="uninstall('${i}')">Désinstaller</button>`;
 		});
 	}
 
 	function uninstall(i) {
+		document.getElementById('div-' + i).children[4].outerHTML = '<div class="loader"></div>';
+		
 		fetch('/uninstall', {
 			headers: {
 				'Accept': 'application/json',
@@ -134,10 +136,7 @@
 			method: 'POST',
 			body: JSON.stringify({pwa: pwas[i].name})
 		}).then(function(response) {
-			response.json().then(function(json) {
-				pwas = json.response;
-				showPwas();
-			});
+			document.getElementById('div-' + i).children[4].outerHTML = `<button class="installButton" onclick="install('${i}')">Installer</button>`;
 		});
 	}
 
@@ -164,7 +163,7 @@
 				html += `<label style="font-size: 40px; font-family: sans-serif;">${pwa.title}</label><br>`;
 
 				if (pwa.installed) {
-					html += `<button class="uninstallButton" onclick="uninstall('${i}')" style="">Désinstaller</button>`;
+					html += `<button class="uninstallButton" onclick="uninstall('${i}')">Désinstaller</button>`;
 				} else {
 					html += `<button class="installButton" onclick="install('${i}')">Installer</button>`;
 				}
