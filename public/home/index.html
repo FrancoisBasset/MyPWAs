@@ -52,12 +52,19 @@
 			}
 
 			.loader {
-				border: 16px solid #f3f3f3; /* Light grey */
-				border-top: 16px solid #3498db; /* Blue */
+				margin-left: 48%;
+				margin-right: 52%;
+				border: 5px solid #f3f3f3; /* Light grey */
+				border-top: 5px solid #3498db; /* Blue */
 				border-radius: 50%;
-				width: 120px;
-				height: 120px;
+				width: 20px;
+				height: 20px;
 				animation: spin 2s linear infinite;
+			}
+
+			@keyframes spin {
+				0% { transform: rotate(0deg); }
+				100% { transform: rotate(360deg); }
 			}
 		</style>
 	</head>
@@ -104,6 +111,8 @@
 	refresh();
 
 	function install(index) {
+		document.getElementById('div-' + index).children[4].outerHTML = '<div class="loader"></div>';
+
 		fetch('/install', {
 			headers: {
 				'Accept': 'application/json',
@@ -112,10 +121,7 @@
 			method: 'POST',
 			body: JSON.stringify({repository: pwas[index].repository})
 		}).then(function(response) {
-			response.json().then(function(json) {
-				pwas = json.response;
-				showPwas();
-			});
+			document.getElementById('div-' + index).children[4].outerHTML = `<button class="uninstallButton" onclick="uninstall('${index}')" style="">Désinstaller</button>`;
 		});
 	}
 
@@ -149,11 +155,11 @@
 			}
 
 			if (tab == 'installed' && pwa.installed) {
-				html += '<td><div>';
+				html += `<td><div id="div-${i}">`;
 				html += `<img src="${pwa.favicon}" onclick="startApp('${i}')" width="200" height="200" style="cursor: pointer" /><br>`;
 				html += `<label style="font-size: 40px; font-family: sans-serif;cursor: pointer" onclick="startApp('${i}')">${pwa.title}</label><br>`;
 			} else if (tab == 'all') {
-				html += '<td><div>';
+				html += `<td><div id="div-${i}">`;
 				html += `<img src="${pwa.favicon}" width="200" height="200" /><br>`;
 				html += `<label style="font-size: 40px; font-family: sans-serif;">${pwa.title}</label><br>`;
 
