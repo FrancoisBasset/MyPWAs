@@ -94,7 +94,14 @@ module.exports.install = function(github) {
 						json.start_url += name + '/';
 						fs.writeFileSync(`./public/${name}/${entry.name}`, JSON.stringify(json, null, '\t'));
 					} else {
-						fs.writeFileSync(`./public/${name}/${entry.name}`, entry.getData());
+						var files = entry.entryName.split('/');
+						var file = entry.entryName.substr(files[0].length + 2 + files[1].length);
+						var folder = file.substr(0, file.length - entry.name.length);
+						
+						if (!fs.existsSync(`./public/${name}/${folder}`))
+							fs.mkdirSync(`./public/${name}/${folder}`);
+
+						fs.writeFileSync(`./public/${name}/${file}`, entry.getData());
 					}
 				}
 			});
