@@ -1,7 +1,7 @@
 {
 	"name": "mypwas",
 	"version": "1.0.0",
-	"description": "Une Progressive Web App qui installe d'autres Progressive Web Apps",
+	"description": "A store for my PWAs",
 	"main": "index.js",
 	"scripts": {
 		"test": "echo \"Error: no test specified\" && exit 1"
