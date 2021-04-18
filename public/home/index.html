@@ -17,7 +17,7 @@
 				height: 10%;
 			}
 
-			#allPwasButton {
+			#pwasButton {
 				width: 50%;
 				font-size: 40px;
 
@@ -75,7 +75,7 @@
 		</table>
 
 		<footer id="buttons">
-			<button id="allPwasButton">Toutes les applications</button>
+			<button id="pwasButton">Toutes les applications</button>
 			<button id="installedPwasButton">Installés</button>
 		</footer>
 	</body>
@@ -86,12 +86,12 @@
 	var pwas = [];
 
 	const pwasDiv = document.getElementById('pwas');
-	const allPwasButton = document.getElementById('allPwasButton');
+	const pwasButton = document.getElementById('pwasButton');
 	const installedPwasButton = document.getElementById('installedPwasButton');
 
-	allPwasButton.addEventListener('click', function(e) {
-		allPwasButton.style.backgroundColor = 'green';
-		allPwasButton.style.color = 'white';
+	pwasButton.addEventListener('click', function(e) {
+		pwasButton.style.backgroundColor = 'green';
+		pwasButton.style.color = 'white';
 		installedPwasButton.style.backgroundColor = 'white';
 		installedPwasButton.style.color = 'black';
 
@@ -102,8 +102,8 @@
 	installedPwasButton.addEventListener('click', function(e) {
 		installedPwasButton.style.backgroundColor = 'green';
 		installedPwasButton.style.color = 'white';
-		allPwasButton.style.backgroundColor = 'white';
-		allPwasButton.style.color = 'black';
+		pwasButton.style.backgroundColor = 'white';
+		pwasButton.style.color = 'black';
 
 		tab = 'installed';
 		showPwas();
@@ -194,7 +194,7 @@
 	}
 
 	function updatePwas() {
-		fetch('/allPwas').then(function(response) {
+		fetch('/pwas').then(function(response) {
 			response.json().then(function(json) {
 				pwas = json.response;
 				showPwas();

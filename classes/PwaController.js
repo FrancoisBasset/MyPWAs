@@ -3,8 +3,8 @@ const fs = require('fs');
 const admZip = require('adm-zip');
 const execSync = require('child_process').execSync;
 
-module.exports.getAllPwas = async function() {
-	const repositories = require('./repositories.json');
+module.exports.getPwas = async function() {
+	const repositories = require('../repositories.json');
 	var pwas = [];
 
 	for (const repository of repositories) {

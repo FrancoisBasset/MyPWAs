@@ -1,7 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const fs = require('fs');
-const utils = require('./utils');
+const PwaController = require('./classes/PwaController');
 
 const app = express();
 app.listen(3000, function() {
@@ -18,10 +18,10 @@ app.get('/home', function(req, res) {
 	res.sendFile('./home/index.html');
 });
 
-app.get('/allPwas', async function(req, res) {
+app.get('/pwas', async function(req, res) {
 	res.json({
 		success: true,
-		response: await utils.getAllPwas()
+		response: await PwaController.getPwas()
 	});
 });
 
@@ -31,7 +31,7 @@ app.post('/install', async function(req, res) {
 
 		res.json({
 			success: true,
-			response: await utils.getAllPwas()
+			response: await utils.getPwas()
 		});
 	});
 });
@@ -41,7 +41,7 @@ app.post('/uninstall', async function(req, res) {
 
 	res.json({
 		success: true,
-		response: await utils.getAllPwas()
+		response: await utils.getPwas()
 	});
 });
 
