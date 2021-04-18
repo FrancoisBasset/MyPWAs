@@ -1,2 +1,2 @@
 # MyPWAs
-Une Progressive Web App qui installe d'autres Progressive Web Apps
+A store for my PWAs
