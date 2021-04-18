@@ -26,20 +26,20 @@ module.exports.writePwasJson = async function() {
 }
 
 module.exports.getInstalledPwas = function() {
-	if (fs.existsSync('./pwas')) {
-		const pwas = fs.readdirSync('./pwas');
-		const public = fs.readdirSync('./public');
-
-		for (const pwa of pwas) {
-			if (!public.includes(pwa)) {
-				pwas.splice(pwas.indexOf(pwa), 1);
-			}
-		}
-
-		return pwas;
-	} else {
+	if (!fs.existsSync('./pwas')) {
 		return [];
 	}
+
+	const pwas = fs.readdirSync('./pwas');
+	const public = fs.readdirSync('./public');
+
+	for (const pwa of pwas) {
+		if (!public.includes(pwa)) {
+			pwas.splice(pwas.indexOf(pwa), 1);
+		}
+	}
+
+	return pwas;
 }
 
 /**
