@@ -3,7 +3,7 @@ const fs = require('fs');
 const admZip = require('adm-zip');
 const execSync = require('child_process').execSync;
 
-module.exports.getPwas = async function() {
+module.exports.writePwasJson = async function() {
 	const repositories = require('../repositories.json');
 	var pwas = [];
 
@@ -22,7 +22,7 @@ module.exports.getPwas = async function() {
 		});
 	}
 
-	return pwas;
+	fs.writeFileSync('./public/home/pwas.json', JSON.stringify(pwas));
 }
 
 module.exports.getInstalledPwas = function() {

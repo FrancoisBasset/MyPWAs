@@ -18,12 +18,7 @@ app.get('/home', function(req, res) {
 	res.sendFile('./home/index.html');
 });
 
-app.get('/pwas', async function(req, res) {
-	res.json({
-		success: true,
-		response: await PwaController.getPwas()
-	});
-});
+PwaController.writePwasJson();
 
 app.post('/install', async function(req, res) {
 	utils.install(req.body.repository).then(async function(name) {

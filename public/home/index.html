@@ -194,9 +194,9 @@
 	}
 
 	function updatePwas() {
-		fetch('/pwas').then(function(response) {
+		fetch('./pwas.json').then(function(response) {
 			response.json().then(function(json) {
-				pwas = json.response;
+				pwas = json;
 				showPwas();
 			});
 		});
