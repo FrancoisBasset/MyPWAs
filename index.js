@@ -20,28 +20,26 @@ app.get('/home', function(req, res) {
 
 PwaController.writePwasJson();
 
-app.post('/install', async function(req, res) {
-	utils.install(req.body.repository).then(async function(name) {
+app.post('/install', function(req, res) {
+	PwaController.install(req.body.name).then(function(name) {
 		app.use('/', require(`./pwas/${name}/routes`));
 
 		res.json({
-			success: true,
-			response: await utils.getPwas()
+			success: true
 		});
 	});
 });
 
-app.post('/uninstall', async function(req, res) {
-	utils.uninstall(app, req.body.pwa);
+app.post('/uninstall', function(req, res) {
+	PwaController.uninstall(req.body.name, app);
 
 	res.json({
-		success: true,
-		response: await utils.getPwas()
+		success: true
 	});
 });
 
 if (fs.existsSync('./pwas')) {
-	for (const pwa of utils.getInstalledPwas()) {
+	for (const pwa of PwaController.getInstalledPwas()) {
 		app.use('/', require(`./pwas/${pwa}/routes`));
 	}
 }

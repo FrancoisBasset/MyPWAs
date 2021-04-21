@@ -1,11 +1,11 @@
 const fetch = require('node-fetch');
 const fs = require('fs');
 const admZip = require('adm-zip');
-const execSync = require('child_process').execSync;
+const exec = require('child_process').exec;
 
 module.exports.writePwasJson = async function() {
 	const repositories = require('../repositories.json');
-	var pwas = [];
+	var pwas = {};
 
 	for (const repository of repositories) {
 		const rawUrl = repository.replace('https://github.com', 'https://raw.githubusercontent.com');
@@ -13,13 +13,13 @@ module.exports.writePwasJson = async function() {
 		const response = await fetch(rawUrl + '/master/package.json');
 		const packageJson = await response.json();
 
-		pwas.push({
-			name: packageJson.name,
-			title: packageJson.title,
-			repository: repository,
-			favicon: rawUrl + '/master/public/favicon.ico',
-			installed: this.getInstalledPwas().includes(packageJson.name)
-		});
+		pwas[packageJson.name] = {
+				name: packageJson.name,
+				title: packageJson.title,
+				repository: repository,
+				favicon: rawUrl + '/master/public/favicon.ico',
+				installed: this.getInstalledPwas().includes(packageJson.name)
+		};
 	}
 
 	fs.writeFileSync('./public/home/pwas.json', JSON.stringify(pwas));
@@ -42,24 +42,40 @@ module.exports.getInstalledPwas = function() {
 	return pwas;
 }
 
+module.exports.setInstalled = function(name) {
+	const pwas = require('../public/home/pwas.json');
+	pwas[name].installed = true;
+
+	fs.writeFileSync('./public/home/pwas.json', JSON.stringify(pwas));
+}
+
+module.exports.setUninstalled = function(name) {
+	const pwas = require('../public/home/pwas.json');
+	pwas[name].installed = false;
+
+	fs.writeFileSync('./public/home/pwas.json', JSON.stringify(pwas));
+}
+
 /**
  * 
- * @param {string} appName 
- * @param {string} github
+ * @param {string} name
  * @returns {Promise}
  */
-module.exports.install = function(github) {
+module.exports.install = function(name) {
 	if (!fs.existsSync('./pwas')) {
 		fs.mkdirSync('./pwas');
 	}
 
-	return fetch(github + '/archive/master.zip').then(function(r) {
+	const pwas = require('../public/home/pwas.json');
+	const pwa = pwas[name];
+
+	return fetch(pwa.repository + '/archive/master.zip').then(r => {
 		/**
 		 * @type {fetch.Response}
 		 */
 		const response = r;
 
-		return response.arrayBuffer().then(function(arrayBuffer) {
+		return response.arrayBuffer().then(arrayBuffer => {
 			const buffer = Buffer.from(arrayBuffer);
 			const zipfile = new admZip(buffer);
 
@@ -106,20 +122,24 @@ module.exports.install = function(github) {
 				}
 			});
 			
-			execSync('npm install ' + dependencies);
+			exec('npm install ' + dependencies);
+
+			this.setInstalled(name);
 
 			return name;
 		});
 	});
 }
 
-module.exports.uninstall = function(app, pwa) {
-	fs.rmdirSync(`./pwas/${pwa}`, {recursive: true});
-	fs.rmdirSync(`./public/${pwa}`, {recursive: true});
+module.exports.uninstall = function(name, app) {
+	fs.rmdirSync(`./pwas/${name}`, {recursive: true});
+	fs.rmdirSync(`./public/${name}`, {recursive: true});
 
 	for (const r of app._router.stack) {
-		if (r.name == 'router' && r.handle.stack[0].route.path.includes(`/${pwa}/`)) {
+		if (r.name == 'router' && r.handle.stack[0].route.path.includes(`/${name}/`)) {
 			app._router.stack.splice(app._router.stack.indexOf(r), 1);
 		}
 	}
+
+	this.setUninstalled(name);
 }
