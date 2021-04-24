@@ -15,6 +15,10 @@ class Pwa {
 	 * @type {HTMLImageElement}
 	 */
 	#img
+	/**
+	 * @type {HTMLDivElement}
+	 */
+	#loader
 
 	constructor(name, title, repository, favicon, installed) {
 		this.name = name;
@@ -40,11 +44,6 @@ class Pwa {
 		label.textContent = title;
 		label.style.cssText = 'font-size: 40px; font-family: sans-serif';
 
-		const iconCell = this.#element.insertCell();
-		iconCell.append(this.#img);
-		iconCell.append(document.createElement('br'));
-		iconCell.append(label);
-
 		this.#button = document.createElement('button');
 		if (installed) {
 			this.#button.textContent = 'Désinstaller';
@@ -58,10 +57,16 @@ class Pwa {
 			}
 		}
 
-		const buttonCell = this.#element.insertCell();
-		buttonCell.append(this.#button);
+		const iconCell = this.#element.insertCell();
+		iconCell.append(this.#img);
+		iconCell.append(document.createElement('br'));
+		iconCell.append(label);
+		iconCell.append(document.createElement('br'));
+		iconCell.append(this.#button);
 
 		this.#loaderCell = this.#element.insertCell();
+		this.#loader = document.createElement('div');
+		this.#loader.className = 'loader';
 	}
 
 	getElement() {
@@ -73,10 +78,7 @@ class Pwa {
 	}
 
 	install() {
-		const loader = document.createElement('div');
-
-		loader.className = 'loader'
-		this.#loaderCell.append(loader);
+		this.#loaderCell.append(this.#loader);
 
 		fetch('/install', {
 			headers: {
@@ -86,7 +88,7 @@ class Pwa {
 			method: 'POST',
 			body: JSON.stringify({name: this.name})
 		}).then(response => {
-			loader.parentElement.remove();
+			this.#loader.parentElement.remove();
 			this.#button.textContent = 'Désinstaller';
 			this.#button.onclick = () => {
 				this.uninstall();
@@ -98,10 +100,7 @@ class Pwa {
 	}
 
 	uninstall() {
-		const loader = document.createElement('div');
-
-		loader.className = 'loader'
-		this.#loaderCell.append(loader);
+		this.#loaderCell.append(this.#loader);
 		
 		fetch('/uninstall', {
 			headers: {
@@ -111,7 +110,7 @@ class Pwa {
 			method: 'POST',
 			body: JSON.stringify({name: this.name})
 		}).then(response => {
-			loader.parentElement.remove();
+			this.#loader.parentElement.remove();
 			this.#button.textContent = 'Installer';
 			this.#button.onclick = () => {
 				this.install();

@@ -20,7 +20,8 @@ module.exports.writePwasJson = async function() {
 				title: packageJson.title,
 				repository: repository,
 				favicon: rawUrl + '/master/public/favicon.ico',
-				installed: this.getInstalledPwas().includes(packageJson.name)
+				installed: this.getInstalledPwas().includes(packageJson.name),
+				installing: false
 		};
 
 		dependencies = dependencies.concat(Object.keys(packageJson.dependencies));
@@ -53,16 +54,16 @@ module.exports.getInstalledPwas = function() {
 	return pwas;
 }
 
-module.exports.setInstalled = function(name) {
+module.exports.setInstalled = function(name, installed) {
 	const pwas = require('../public/home/pwas.json');
-	pwas[name].installed = true;
+	pwas[name].installed = installed;
 
 	fs.writeFileSync('./public/home/pwas.json', JSON.stringify(pwas));
 }
 
-module.exports.setUninstalled = function(name) {
+module.exports.setInstalling = function(name, installing) {
 	const pwas = require('../public/home/pwas.json');
-	pwas[name].installed = false;
+	pwas[name].installing = installing;
 
 	fs.writeFileSync('./public/home/pwas.json', JSON.stringify(pwas));
 }
@@ -76,6 +77,8 @@ module.exports.install = function(name) {
 	if (!fs.existsSync('./pwas')) {
 		fs.mkdirSync('./pwas');
 	}
+
+	this.setInstalling(name, true);
 
 	const pwas = require('../public/home/pwas.json');
 	const pwa = pwas[name];
@@ -132,7 +135,8 @@ module.exports.install = function(name) {
 				}
 			});
 
-			this.setInstalled(name);
+			this.setInstalled(name, true);
+			this.setInstalling(name, false);
 
 			return name;
 		});
@@ -149,5 +153,5 @@ module.exports.uninstall = function(name, app) {
 		}
 	}
 
-	this.setUninstalled(name);
+	this.setInstalled(name, false);
 }
