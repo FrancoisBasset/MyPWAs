@@ -22,11 +22,6 @@
 	"bugs": {
 		"url": "https://github.com/FrancoisBasset/MyPWAs/issues"
 	},
-	"nodemonConfig": {
-		"ignore": [
-			"public/home/pwas.json"
-		]
-	},
 	"homepage": "https://github.com/FrancoisBasset/MyPWAs#readme",
 	"dependencies": {
 		"adm-zip": "^0.5.1",

@@ -1,11 +1,13 @@
 const fetch = require('node-fetch');
 const fs = require('fs');
 const admZip = require('adm-zip');
-const exec = require('child_process').exec;
+const execSync = require('child_process').execSync;
 
 module.exports.writePwasJson = async function() {
 	const repositories = require('../repositories.json');
 	var pwas = {};
+
+	var dependencies = [];
 
 	for (const repository of repositories) {
 		const rawUrl = repository.replace('https://github.com', 'https://raw.githubusercontent.com');
@@ -20,9 +22,18 @@ module.exports.writePwasJson = async function() {
 				favicon: rawUrl + '/master/public/favicon.ico',
 				installed: this.getInstalledPwas().includes(packageJson.name)
 		};
+
+		dependencies = dependencies.concat(Object.keys(packageJson.dependencies));
 	}
 
 	fs.writeFileSync('./public/home/pwas.json', JSON.stringify(pwas));
+
+	dependencies = [... new Set(dependencies)].join(' ');
+
+	process.stdout.write('Installation dependences...  ');
+	execSync('npm install ' + dependencies + ' --silent');
+
+	process.stdout.write('OK');
 }
 
 module.exports.getInstalledPwas = function() {
@@ -83,7 +94,6 @@ module.exports.install = function(name) {
 			const packageJsonEntry = zipfile.getEntry(root + 'package.json');
 			const packageJson = JSON.parse(packageJsonEntry.getData().toString());
 			const name = packageJson.name;
-			const dependencies = Object.keys(packageJson.dependencies).join(' ');
 
 			if (!fs.existsSync(`./public/${name}`)) {
 				fs.mkdirSync(`./public/${name}`);
@@ -121,8 +131,6 @@ module.exports.install = function(name) {
 					}
 				}
 			});
-			
-			exec('npm install ' + dependencies);
 
 			this.setInstalled(name);
 
