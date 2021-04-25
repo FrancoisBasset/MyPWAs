@@ -76,14 +76,7 @@ class Pwa {
 						pwas = json;
 						if (pwas[this.name].installing == false) {
 							clearInterval(intervalId);
-							this.#loader.parentElement.remove();
-							this.#button.textContent = 'Désinstaller';
-							this.#button.onclick = () => {
-								this.uninstall();
-							}
-							this.#img.onclick = () => {
-								this.start();
-							}
+							this.#whenInstalled();							
 						}
 					});
 				}, 1000);
@@ -110,14 +103,7 @@ class Pwa {
 			method: 'POST',
 			body: JSON.stringify({name: this.name})
 		}).then(response => {
-			this.#loader.parentElement.remove();
-			this.#button.textContent = 'Désinstaller';
-			this.#button.onclick = () => {
-				this.uninstall();
-			}
-			this.#img.onclick = () => {
-				this.start();
-			}
+			this.#whenInstalled();
 		});
 	}
 
@@ -132,12 +118,27 @@ class Pwa {
 			method: 'POST',
 			body: JSON.stringify({name: this.name})
 		}).then(response => {
-			this.#loader.parentElement.remove();
-			this.#button.textContent = 'Installer';
-			this.#button.onclick = () => {
-				this.install();
-			}
-			this.#img.onclick = null;
+			this.#whenUninstalled();
 		});
+	}
+
+	#whenInstalled() {
+		this.#loader.parentElement.remove();
+		this.#button.textContent = 'Désinstaller';
+		this.#img.onclick = () => {
+			this.start();
+		}
+		this.#button.onclick = () => {
+			this.uninstall();
+		}
+	}
+
+	#whenUninstalled() {
+		this.#loader.parentElement.remove();
+		this.#button.textContent = 'Installer';
+		this.#img.onclick = null;
+		this.#button.onclick = () => {
+			this.install();
+		}
 	}
 }
