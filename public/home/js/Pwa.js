@@ -20,12 +20,13 @@ class Pwa {
 	 */
 	#loader
 
-	constructor(name, title, repository, favicon, installed) {
+	constructor(name, title, repository, favicon, installed, installing) {
 		this.name = name;
 		this.title = title;
 		this.repository = repository;
 		this.favicon = favicon;
 		this.installed = installed;
+		this.installing = installing;
 
 		this.#element = document.createElement('tr');
 
@@ -67,6 +68,27 @@ class Pwa {
 		this.#loaderCell = this.#element.insertCell();
 		this.#loader = document.createElement('div');
 		this.#loader.className = 'loader';
+		if (this.installing) {
+			this.#loaderCell.append(this.#loader);
+			var intervalId = setInterval(() => {
+				fetch('./pwas.json').then(response => {
+					response.json().then(json => {
+						pwas = json;
+						if (pwas[this.name].installing == false) {
+							clearInterval(intervalId);
+							this.#loader.parentElement.remove();
+							this.#button.textContent = 'Désinstaller';
+							this.#button.onclick = () => {
+								this.uninstall();
+							}
+							this.#img.onclick = () => {
+								this.start();
+							}
+						}
+					});
+				}, 1000);
+			})
+		}
 	}
 
 	getElement() {

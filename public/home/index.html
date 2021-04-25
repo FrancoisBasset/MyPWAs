@@ -114,29 +114,9 @@
 		for (const name of Object.keys(pwas)) {
 			const pwaJson = pwas[name];
 
-			const pwa = new Pwa(pwaJson.name, pwaJson.title, pwaJson.repository, pwaJson.favicon, pwaJson.installed);
+			const pwa = new Pwa(pwaJson.name, pwaJson.title, pwaJson.repository, pwaJson.favicon, pwaJson.installed, pwaJson.installing);
 			pwasDiv.append(pwa.getElement());
 		}
-			
-
-			/*if (tab == 'installed' && pwa.installed) {
-				html += `<td><div id="div-${i}">`;
-				html += `<img src="${pwa.favicon}" onclick="startPwa('${i}')" width="300" height="300" style="cursor: pointer" /><br>`;
-				html += `<label style="font-size: 40px; font-family: sans-serif;cursor: pointer" onclick="startPwa('${i}')">${pwa.title}</label><br>`;
-			} else if (tab == 'all') {
-				html += `<td><div id="div-${i}">`;
-				html += `<label style="font-size: 40px; font-family: sans-serif;">${pwa.title}</label><br>`;
-
-				if (pwa.installed) {
-					html += `<button class="uninstallButton" onclick="uninstall('${i}')">Désinstaller</button>`;
-				} else if (pwa.loading) {
-					html += '<div class="loader"></div>';
-				} else {
-					html += `<button class="installButton" onclick="install('${i}')">Installer</button>`;
-				}
-			}*/
-
-			
 	}
 
 	function updatePwas() {
